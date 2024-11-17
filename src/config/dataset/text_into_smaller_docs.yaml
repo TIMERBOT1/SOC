@@ -1,0 +1,5 @@
+path: "../../data/raw/text_content_SOC.txt"
+func: "../../features/spliter.text_into_smaller_docs"
+params:
+- chunk_size: 2000
+- child_chunk_size: 400
