@@ -1,4 +1,4 @@
-from langchain.retrievers import BM25Retriever
+from langchain_community.retrievers import BM25Retriever
 
 
 def create_bm25_retriever(split_text):

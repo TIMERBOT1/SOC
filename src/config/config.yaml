@@ -1,4 +1,4 @@
+retriever_name: multivector
 defaults:
-  - retriever_name: multivector
   - embeddings: USER-bge-m3_model
   - dataset: text_into_smaller_docs

@@ -1,7 +1,6 @@
 from langchain_community.vectorstores import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.storage import InMemoryByteStore
-from src.features.splliter import text_into_smaller_docs, table_into_docs
 
 
 def init_retriever(vectorstore):
