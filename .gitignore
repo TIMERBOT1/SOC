@@ -1,0 +1,7 @@
+.venv/
+.idea/
+outputs/
+__init__*
+*.pyc
+__pycache__/
+*.pkl

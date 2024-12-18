@@ -1,0 +1,5 @@
+class_path: src.retrievers.multivector_retriever.MVRetriever
+defaults:
+  - _self_
+  - embeddings: USER-bge-m3_model
+  - dataset: text_into_smaller_docs

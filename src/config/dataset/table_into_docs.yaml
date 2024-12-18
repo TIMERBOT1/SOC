@@ -1,0 +1,6 @@
+_target_: "src.features.splitter.TableIntoDocs"
+path: "data/raw/latex_tables_SOC_v1.txt"
+model_name: "llama3.1"
+prompt_text: """Вы - ассистент, которому поручено обобщать таблицы и текст. \
+Приведите краткое изложение таблицы или текста. Таблица отформатирована в LaTeX, а ее заголовок представлен в обычном текстовом формате: {element}"""
+max_concurrency: 5

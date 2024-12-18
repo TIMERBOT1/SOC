@@ -1,0 +1,8 @@
+defaults:
+  - _self_
+
+_target_: "src.features.splitter.TextIntoSmallerDocs"
+
+path: "data/raw/text_content_SOC.txt"
+chunk_size: 2000
+child_chunk_size: 400

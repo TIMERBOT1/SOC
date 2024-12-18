@@ -1,0 +1,3 @@
+_target_: "src.features.splitter.TextIntoDocs"
+path: "data/raw/text_content_SOC.txt"
+chunk_size: 2000

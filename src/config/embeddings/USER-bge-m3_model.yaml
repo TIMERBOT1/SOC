@@ -1,0 +1,5 @@
+_target_: langchain.embeddings.huggingface.HuggingFaceEmbeddings
+model_name: "deepvk/USER-bge-m3"
+model_kwargs: {"device": "cpu"}
+encode_kwargs: {"normalize_embeddings": True, "batch_size":4}
+show_progress: True
