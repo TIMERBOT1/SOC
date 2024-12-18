@@ -1,5 +1,5 @@
 from langchain_community.retrievers import BM25Retriever
-from src.retrievers.retriever import Retriever
+from retrievers.retriever import Retriever
 
 
 class BMRetriever(Retriever):

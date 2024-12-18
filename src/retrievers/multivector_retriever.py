@@ -1,7 +1,7 @@
 from langchain_community.vectorstores import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.storage import InMemoryByteStore
-from src.retrievers.retriever import Retriever
+from retrievers.retriever import Retriever
 
 
 class MVRetriever(Retriever):

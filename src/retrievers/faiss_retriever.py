@@ -1,5 +1,5 @@
 from langchain_community.vectorstores import FAISS
-from src.retrievers.retriever import Retriever
+from retrievers.retriever import Retriever
 
 
 class FaissRetriever(Retriever):

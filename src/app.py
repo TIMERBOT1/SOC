@@ -5,7 +5,7 @@ import json
 app = Flask(__name__)
 
 def generate_answer(question):
-    with open("/path/to/your/chain.json", "r") as file:
+    with open("data/processed/rag_chain.pkl", "r") as file:
         string_representation = file.read()
 
     chain = loads(string_representation)
