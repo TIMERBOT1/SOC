@@ -1,0 +1,36 @@
+stages:
+  make_first_retriever:
+    cmd: python src/make_retriever.py --config-name ret1_config
+    deps:
+    - src/config/ret1_config.yaml
+    - src/make_retriever.py
+    outs:
+    - data/interim/first_retriever.pkl
+  make_second_retriever:
+    cmd: python src/make_retriever.py --config-name config
+    deps:
+    - src/config/ret2_config.yaml
+    - src/make_retriever.py
+    outs:
+    - data/interim/second_retriever.pkl
+  ensemble_retrievers:
+    cmd: python src/essemble_retrievers.py
+    deps:
+    - data/interim/first_retriever.pkl
+    - data/interim/second_retriever.pkl
+    - src/essemble_retrievers.py
+    params:
+    - essemble_retrievers.weight1
+    - essemble_retrievers.weight2
+    outs:
+    - data/processed/retriever.pkl
+  buitl_rag_chain:
+    cmd: python src/rag_chain.py
+    deps:
+    - data/processed/retriever.pkl
+    - src/rag_chain
+    params:
+    - built_rag_chain.model
+    - built_rag_chain.template
+    outs:
+    - data/processed/rag_chain.pkl

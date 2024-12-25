@@ -1,0 +1,6 @@
+class_path: retrievers.multivector_retriever.MVRetriever
+file_name: data/interim/first_retriever.pkl
+defaults:
+  - _self_
+  - embeddings: USER-bge-m3_model
+  - dataset: text_into_smaller_docs

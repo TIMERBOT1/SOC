@@ -1,0 +1,6 @@
+essemble_retrievers:
+  weight1: 0.5
+  weight2: 0.5
+built_rag_chain:
+  template: "Answer the question based only on the following context, which can include text and tables, there is a table in LaTeX format and a table caption in plain text format or text is a string: {context} Question: {question}"
+  model: "llama3.1"
