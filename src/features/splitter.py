@@ -18,7 +18,7 @@ class TextIntoDocs:
     def split_text(self):
         split_text = '|'.join(self.text)
         splitter = RecursiveCharacterTextSplitter(chunk_size=self.chunk_size, separators=['|', ])
-        split_docs = splitter.create_documents([split_text])
+        split_docs = splitter.split_text([split_text])
         return split_docs
 
 
@@ -54,11 +54,13 @@ class TextIntoSmallerDocs:
             self.text = text.read()
         self.chunk_size = chunk_size
         self.child_chunk_size = child_chunk_size
-        self.splitter = TextIntoDocs(path, chunk_size)
 
     def split_text(self):
         sub_text_docs = []
-        split_docs = self.splitter.split_text()
+
+        split_text = '|'.join(self.text)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=self.chunk_size, separators=['|', ])
+        split_docs = splitter.create_documents([split_text])
 
         split_docs_ids = [str(uuid.uuid4()) for _ in split_docs]
         child_text_splitter = RecursiveCharacterTextSplitter(chunk_size=self.child_chunk_size)

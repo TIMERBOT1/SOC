@@ -1,4 +1,4 @@
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.storage import InMemoryByteStore
 from retrievers.retriever import Retriever
@@ -18,6 +18,8 @@ class MVRetriever(Retriever):
         return retriever
 
     def create_retriever(self):
+        # text_list = [x.page_content for x in self.dataset.split_text()[2]]
+        # print(type(self.embeddings.embed_documents(text_list)))
         split_docs, split_docs_ids, sub_text_docs = self.dataset.split_text()
         vectorstore = Chroma(
         collection_name='collection', embedding_function=self.embeddings

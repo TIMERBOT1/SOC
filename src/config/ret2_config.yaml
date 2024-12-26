@@ -2,5 +2,5 @@ class_path: retrievers.multivector_retriever.MVRetriever
 file_name: data/interim/second_retriever.pkl
 defaults:
   - _self_
-  - embeddings: USER-bge-m3_model
+  - embeddings: custom_ollama_embeddings
   - dataset: table_into_docs

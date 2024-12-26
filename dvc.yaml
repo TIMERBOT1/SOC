@@ -34,3 +34,11 @@ stages:
     - built_rag_chain.template
     outs:
     - data/processed/rag_chain.pkl
+  evaluate:
+    cmd: python src/models/evaluate_chain.py data/raw/df.csv
+    deps:
+    - data/processed/rag_chain.pkl
+    - data/raw/df.csv
+    - src/models/evaluate_chain.py
+    outs:
+    - data/processed/metrics.json
