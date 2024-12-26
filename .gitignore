@@ -1,5 +1,5 @@
 .venv/
-.myenv/
+myenv/
 .idea/
 outputs/
 __init__*
