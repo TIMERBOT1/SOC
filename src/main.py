@@ -2,7 +2,7 @@ import cmd
 from src.make_retriever import make_retriever
 from hydra import compose, initialize
 from langchain.retrievers import EnsembleRetriever
-from src.models.rag_chain import built_rag_chain
+from src.rag_chain import built_rag_chain
 from langchain_core.load import dumpd
 
 

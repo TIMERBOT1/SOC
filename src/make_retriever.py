@@ -2,7 +2,6 @@ from omegaconf import DictConfig
 import hydra
 from hydra.utils import instantiate
 import importlib 
-from retrievers.save_load_retrievers import save_retriever
 
 
 @hydra.main(version_base=None, config_path="config")
@@ -15,10 +14,8 @@ def make_retriever(cfg: DictConfig):
     module = importlib.import_module(module_path)  # импортирует модуль
     cls = getattr(module, class_name)
 
-    instance = cls(embeddings, dataset)
-    retriever = instance.create_retriever()
-
-    save_retriever(retriever, cfg.file_name)
+    instance = cls(cfg.file_name, embeddings, dataset)
+    instance.create_retriever()
 
 
 if __name__ == "__main__":

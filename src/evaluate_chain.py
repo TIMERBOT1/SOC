@@ -5,7 +5,8 @@ import sys
 import evaluate
 import spacy
 from sentence_transformers import SentenceTransformer, util
-import pickle
+from clearml import Task
+from rag_chain import built_rag_chain
 import json
 
 
@@ -25,19 +26,20 @@ def evaluate_generation():
   # загружаем пайплайн обработки текста из библиотеки spacy для русского языка
   nlp = spacy.load("ru_core_news_sm")
 
-  ground_truths = []
+  ground_truth = [] 
 
-  with open('data/processed/rag_chain.pkl', 'wb') as file:
-        rag_chain = pickle.load(file)
+  rag_chain = built_rag_chain()
 
   df_test = pd.read_csv(sys.argv[1])
   questions = df_test['question'].values.tolist()
 
   for q in questions:
-     ground_truths.append(rag_chain.invoke(q))
+     ground_truth.append(rag_chain.invoke(q))
+  df_test['ground_truth'] = ground_truth
 
   # далаем предобработку текстов
-  ground_truths = list(map(lambda x: ' '.join(
+  df_test['cleaned_ground_truth'] = df_test['ground_truth'].apply(
+    lambda x: ' '.join(
         token.lemma_.lower() for token in nlp(x) if
         not token.is_stop
         and not token.is_punct
@@ -45,7 +47,7 @@ def evaluate_generation():
         and not token.like_email
         and not token.like_num
         and not token.is_space
-    ), ground_truths)
+    )
   )
 
   df_test['cleaned_answer'] = df_test['answer'].apply(
@@ -61,7 +63,7 @@ def evaluate_generation():
   )
 
   # получаем предобработанные ответы из документации и из пайплайна RAG
-  ground_truths = pd.Series(ground_truths)
+  ground_truths = df_test['cleaned_ground_truth']
   answers = df_test["answer"]
 
   # расчет метрики rouge
@@ -106,10 +108,23 @@ def evaluate_generation():
     'chrf': chrf_scores['score']
   }
 
+  result_metrics = {key: float(np.float32(value)) for key, value in result_metrics.items()}
+
   with open('data/processed/metrics.json', 'w') as json_file:
     json.dump(result_metrics, json_file)
 
-  return result_metrics
+  task = Task.init(project_name="RAG Evaluation", task_name="Evaluation Metrics Logging")
+  logger = task.get_logger()  
+
+  # Логирование метрик
+  for metric_name, metric_value in result_metrics.items():
+    logger.report_scalar("Evaluation Metrics", metric_name, metric_value, iteration=0) 
+
+  # Логирование текстов
+  logger.report_text("Ground Truths:\n" + "\n".join(ground_truths))
+  logger.report_text("Model Predictions:\n" + "\n".join(df_test["answer"].tolist()))  
+
+  task.close()
 
 
 if __name__ == "__main__":

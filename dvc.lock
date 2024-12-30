@@ -1,0 +1,151 @@
+schema: '2.0'
+stages:
+  make_first_retriever:
+    cmd: python src/make_retriever.py --config-name ret1_config
+    deps:
+    - path: src/config/ret1_config.yaml
+      hash: md5
+      md5: 2e7f2cf4b7d081881f67212e72457281
+      size: 195
+    - path: src/make_retriever.py
+      hash: md5
+      md5: a0aa1ff60dbe89d2af66818b6692e740
+      size: 703
+    outs:
+    - path: data/interim/first_retriever_docstore.pkl
+      hash: md5
+      md5: dec462cae463b29f8f52a2562e51a14e
+      size: 21080
+    - path: data/interim/first_retriever_vectorstore
+      hash: md5
+      md5: d654ff90e48d301a08fbd7c9002ae08d.dir
+      size: 4461284
+      nfiles: 5
+  make_second_retriever:
+    cmd: python src/make_retriever.py --config-name ret2_config
+    deps:
+    - path: src/config/ret2_config.yaml
+      hash: md5
+      md5: 49db7d4718833af589f05e051f135fb5
+      size: 189
+    - path: src/make_retriever.py
+      hash: md5
+      md5: a0aa1ff60dbe89d2af66818b6692e740
+      size: 703
+    outs:
+    - path: data/interim/second_retriever_docstore.pkl
+      hash: md5
+      md5: 2291b19ebc05e6d19bc81cd79f4de2dd
+      size: 164184
+    - path: data/interim/second_retriever_vectorstore
+      hash: md5
+      md5: 17908db563c0c644e91dcb1ef245940d.dir
+      size: 4637412
+      nfiles: 5
+  built_rag_chain:
+    cmd: python src/rag_chain.py
+    deps:
+    - path: data/interim/first_retriever_docstore.pkl
+      hash: md5
+      md5: 98330271f58c813f45c937b8113769c9
+      size: 21080
+    - path: data/interim/first_retriever_vectorstore
+      hash: md5
+      md5: 82fa11b30b194d749944aed5b13d69a6.dir
+      size: 4461284
+      nfiles: 5
+    - path: data/interim/second_retriever_docstore.pkl
+      hash: md5
+      md5: 3fb21535e25fe5697da0b0a11541d75c
+      size: 164184
+    - path: data/interim/second_retriever_vectorstore
+      hash: md5
+      md5: 0d6b99039aebc0e0610dc87b258ea7fe.dir
+      size: 4637412
+      nfiles: 5
+    - path: src/rag_chain.py
+      hash: md5
+      md5: 7e5d0f3e048af13dc9f5aa4b3fd4d7d2
+      size: 1426
+    params:
+      params.yaml:
+        built_rag_chain.model: llama3.1
+        built_rag_chain.template: 'Answer the question based only on the following
+          context, which can include text and tables, there is a table in LaTeX format
+          and a table caption in plain text format or text is a string: {context}
+          Question: {question}'
+        built_rag_chain.weights:
+        - 0.5
+        - 0.5
+    outs:
+    - path: data/processed/rag_chain.json
+      hash: md5
+      md5: 576783105d1dfa34e6620e3c461892ae
+      size: 1242
+  rag_chain_setup:
+    cmd: python src/rag_chain_setup.py
+    deps:
+    - path: src/rag_chain_setup.py
+      hash: md5
+      md5: 1cb22569f76abe7821fe62289f60285d
+      size: 900
+    params:
+      params.yaml:
+        rag_chain_setup.model: llama3.1
+        rag_chain_setup.template: 'Answer the question based only on the following
+          context, which can include text and tables, there is a table in LaTeX format
+          and a table caption in plain text format or text is a string: {context}
+          Question: {question}'
+    outs:
+    - path: data/processed/rag_chain_setup.json
+      hash: md5
+      md5: 576783105d1dfa34e6620e3c461892ae
+      size: 1242
+  evaluate:
+    cmd: python src/evaluate_chain.py data/raw/df.csv
+    deps:
+    - path: data/interim/first_retriever_docstore.pkl
+      hash: md5
+      md5: dec462cae463b29f8f52a2562e51a14e
+      size: 21080
+    - path: data/interim/first_retriever_vectorstore
+      hash: md5
+      md5: d654ff90e48d301a08fbd7c9002ae08d.dir
+      size: 4461284
+      nfiles: 5
+    - path: data/interim/second_retriever_docstore.pkl
+      hash: md5
+      md5: 2291b19ebc05e6d19bc81cd79f4de2dd
+      size: 164184
+    - path: data/interim/second_retriever_vectorstore
+      hash: md5
+      md5: 17908db563c0c644e91dcb1ef245940d.dir
+      size: 4637412
+      nfiles: 5
+    - path: data/raw/df.csv
+      hash: md5
+      md5: b174d54d63d918f5ad4727052ad09af0
+      size: 1395
+    - path: src/evaluate_chain.py
+      hash: md5
+      md5: b6d151b716335dbef8f45e03d431ad9c
+      size: 4579
+    - path: src/rag_chain.py
+      hash: md5
+      md5: 3cbae3f872340aa8158fb34c9b86a4a6
+      size: 1170
+    params:
+      params.yaml:
+        ensemble_retrievers.weights:
+        - 0.5
+        - 0.5
+        rag_chain_setup.model: llama3.1
+        rag_chain_setup.template: 'Answer the question based only on the following
+          context, which can include text and tables, there is a table in LaTeX format
+          and a table caption in plain text format or text is a string: {context}
+          Question: {question}'
+    outs:
+    - path: data/processed/metrics.json
+      hash: md5
+      md5: e27d475e2670fd0657a48117e3115c42
+      size: 267

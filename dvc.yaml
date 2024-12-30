@@ -5,40 +5,29 @@ stages:
     - src/config/ret1_config.yaml
     - src/make_retriever.py
     outs:
-    - data/interim/first_retriever.pkl
+    - data/interim/first_retriever_vectorstore
+    - data/interim/first_retriever_docstore.pkl
   make_second_retriever:
-    cmd: python src/make_retriever.py --config-name config
+    cmd: python src/make_retriever.py --config-name ret2_config
     deps:
     - src/config/ret2_config.yaml
     - src/make_retriever.py
     outs:
-    - data/interim/second_retriever.pkl
-  ensemble_retrievers:
-    cmd: python src/essemble_retrievers.py
-    deps:
-    - data/interim/first_retriever.pkl
-    - data/interim/second_retriever.pkl
-    - src/essemble_retrievers.py
-    params:
-    - essemble_retrievers.weight1
-    - essemble_retrievers.weight2
-    outs:
-    - data/processed/retriever.pkl
-  buitl_rag_chain:
-    cmd: python src/rag_chain.py
-    deps:
-    - data/processed/retriever.pkl
-    - src/rag_chain
-    params:
-    - built_rag_chain.model
-    - built_rag_chain.template
-    outs:
-    - data/processed/rag_chain.pkl
+    - data/interim/second_retriever_vectorstore
+    - data/interim/second_retriever_docstore.pkl
   evaluate:
-    cmd: python src/models/evaluate_chain.py data/raw/df.csv
+    cmd: python src/evaluate_chain.py data/raw/df.csv
     deps:
-    - data/processed/rag_chain.pkl
+    - data/interim/first_retriever_vectorstore
+    - data/interim/first_retriever_docstore.pkl
+    - data/interim/second_retriever_vectorstore
+    - data/interim/second_retriever_docstore.pkl
     - data/raw/df.csv
-    - src/models/evaluate_chain.py
+    - src/rag_chain.py
+    - src/evaluate_chain.py
+    params:
+    - ensemble_retrievers.weights
+    - rag_chain_setup.model
+    - rag_chain_setup.template
     outs:
     - data/processed/metrics.json

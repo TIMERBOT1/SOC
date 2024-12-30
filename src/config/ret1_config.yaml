@@ -1,5 +1,5 @@
 class_path: retrievers.multivector_retriever.MVRetriever
-file_name: data/interim/first_retriever.pkl
+file_name: data/interim/first_retriever_
 defaults:
   - _self_
   - embeddings: custom_ollama_embeddings

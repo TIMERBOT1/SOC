@@ -1,10 +1,7 @@
-from hydra.utils import instantiate
-from omegaconf import OmegaConf
-
-
 class Retriever:
     
-    def __init__(self, embeddings, dataset):
+    def __init__(self, persist_directory, embeddings, dataset):
+        self.persist_directory = persist_directory
         self.embeddings = embeddings
         self.dataset = dataset
 

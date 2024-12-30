@@ -6,6 +6,7 @@ from langchain_ollama import ChatOllama
 from langchain.text_splitter import (
     RecursiveCharacterTextSplitter,
 )
+import json
 
 
 class TextIntoDocs:
@@ -26,7 +27,7 @@ class TableIntoDocs:
 
     def __init__(self, path, model_name, prompt_text, max_concurrency):
         with open(path, "r") as text:
-            self.text = text.read()
+            self.text = json.load(text)
         self.model_name = model_name
         self.prompt_text = prompt_text
         self.max_concurrency = max_concurrency
@@ -45,7 +46,7 @@ class TableIntoDocs:
             Document(page_content=s, metadata={'id_key': table_ids[i]})
             for i, s in enumerate(table_summaries)
         ]
-        return (self.text, table_ids, summary_tables)
+        return [Document(page_content=x) for x in self.text], table_ids, summary_tables
 
 class TextIntoSmallerDocs:
 
@@ -72,3 +73,10 @@ class TextIntoSmallerDocs:
                 _doc.metadata['id_key'] = _id
             sub_text_docs.extend(_sub_docs)
         return split_docs, split_docs_ids, sub_text_docs
+    
+
+
+if __name__ == "__main__":
+    a = TableIntoDocs("data/raw/latex_tables_SOC_v1.txt", "llama3.1", """Вы - ассистент, которому поручено обобщать таблицы и текст. Приведите краткое изложение таблицы или текста. Таблица отформатирована в LaTeX, а ее заголовок представлен в обычном текстовом формате: {element}""", 5)
+    result = a.split_text()
+    print(len(result[0]), len(result[1]), len(result[2]))
